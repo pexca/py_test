@@ -30,3 +30,26 @@ class GroupHelper:
         wd = self.app.wd
         # open groups page
         wd.find_element_by_link_text("groups").click()
+
+    def del_fst_group(self):
+        wd = self.app.wd
+        self.open_gp()
+        #select first group
+        #submit group deletion
+        wd.find_element_by_name("selected[]").click()
+        wd.find_element_by_name("delete").click()
+        wd.find_element_by_link_text("group page").click()
+
+    def rename(self):
+        wd = self.app.wd
+        self.open_gp()
+        if not wd.find_element_by_name("selected[]").is_selected():
+            wd.find_element_by_name("selected[]").click()
+        wd.find_element_by_name("edit").click()
+        wd.find_element_by_name("group_name").click()
+        wd.find_element_by_name("group_name").clear()
+        wd.find_element_by_name("group_name").send_keys("qwerty/renamed")
+        wd.find_element_by_css_selector("#content > form").click()
+        wd.find_element_by_css_selector("#content > form").click()
+        wd.find_element_by_name("update").click()
+        wd.find_element_by_link_text("group page").click()

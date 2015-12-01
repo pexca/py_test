@@ -20,3 +20,18 @@ class ContactHelper:
         wd.find_element_by_name("email").send_keys(contact.email)
         # submit contact data
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+
+    def del_fstcontact(self):
+        wd = self.app.wd
+        #select first contact
+        wd.find_element_by_name("selected[]").click()
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        wd.switch_to_alert().accept()
+
+    def add_address(self):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("img[alt=\"Edit\"]").click()
+        wd.find_element_by_name("address").click()
+        wd.find_element_by_name("address").clear()
+        wd.find_element_by_name("address").send_keys("Moscow")
+        wd.find_element_by_name("update").click()
