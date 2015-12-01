@@ -1,16 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-from fixture.appl import Application
 from model.group import Group
-
-
-# метка инициализатора фикстуры
-@pytest.fixture
-def app(request):  # инициализировать фикстуру
-    fixture = Application()
-    request.addfinalizer(fixture.demolish)  # метод параметра request, разрушающий фикстуру
-    return fixture
 
 
 def test_add_group(app):
