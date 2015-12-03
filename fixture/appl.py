@@ -9,10 +9,16 @@ class Application:  # содержит все вспомогательные м�
     def __init__(self):
         # initialize driver
         self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
+        self.wd.implicitly_wait(5)
         self.session = SessionHandler(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
+
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except: return False
 
     def open_hp(self):
         wd = self.wd

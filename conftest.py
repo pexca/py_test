@@ -1,9 +1,26 @@
 import pytest
 from fixture.appl import Application
 
+fixture = None
 
-@pytest.fixture(scope = "session")
+
+@pytest.fixture  # инициализация и проверка работоспособности фикстуры
 def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.demolish)
+    global fixture
+    if fixture is None:
+        fixture = Application()
+    elif not fixture.is_valid():
+        fixture = Application()
+    fixture.session.ensure_login(username="admin", password="secret")
     return fixture
+
+
+@pytest.fixture(scope="session", autouse=True)  # создание фикстуры для финализации
+def stop(request):
+    def fin():
+        fixture.session.ensure_logout()
+        fixture.demolish()
+    request.addfinalizer(fin)
+    return fixture
+
+# autouse=True - параметр автоматического срensure_абатывания фикстуры, если она нигде не указана
