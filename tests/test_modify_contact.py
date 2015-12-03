@@ -1,6 +1,13 @@
+from model.contact import Contact
 
 
-def test_edit_contact(app):
-    app.session.login(username="admin", password="secret")
+def test_add_location(app):
+    if app.contact.count() == 0:
+        app.contact.create_new_(Contact(firstname='test'))
     app.contact.add_address()
-    app.session.logout()
+
+
+def test_mod_fstc(app):
+    if app.contact.count() == 0:
+        app.contact.create_new_(Contact(firstname='test'))
+    app.contact.mod_fstC(Contact(lastname='test'))
