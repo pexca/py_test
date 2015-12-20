@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from model.contact import Contact
+from model.group import *
 
 
 def test_add_contact(app):
@@ -10,7 +11,7 @@ def test_add_contact(app):
     assert len(old_conts)+1 == app.contact.count()
     new_conts = app.contact.get_conts_lst()
     old_conts.append(contact)
-    assert sorted(old_conts, key=Contact.id_or_max) == sorted(new_conts, key=Contact.id_or_max)
+    assert sorted(old_conts, key=Group.id_or_max) == sorted(new_conts, key=Group.id_or_max)
 
 
 """
