@@ -1,3 +1,6 @@
+from model.group import *
+
+
 class GroupHelper:
 
     def __init__(self, app):
@@ -17,6 +20,7 @@ class GroupHelper:
         # submit group creation
         wd.find_element_by_name("submit").click()
         self.return_to_gp()
+        self.group_cache = None
 
     def fill_gform(self, group):
         wd = self.app.wd
@@ -33,32 +37,58 @@ class GroupHelper:
 
     def open_gp(self):
         wd = self.app.wd
-        if not (wd.current_url.endswith("\group") and len(wd.find_elements_by_name('new')) > 0):
+        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name('new')) > 0):
             wd.find_element_by_link_text("groups").click()
 
     def del_fst_group(self):
+        self.del_idxgroup(0)
+
+    def sel_idxgroup(self, idx):  # select group with random index
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[idx].click()
+
+    def del_idxgroup(self, idx):  # delete group with random index 'idx'
         wd = self.app.wd
         self.open_gp()
-        #select first group
-        #submit group deletion
-        self.select_fst_g()
+        # select first group
+        # submit group deletion
+        self.sel_idxgroup(idx)
         wd.find_element_by_name("delete").click()
         wd.find_element_by_link_text("group page").click()
+        self.group_cache = None
 
     def select_fst_g(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
-    def modify_fst_g(self, new_gData):
+    def modify_fstg(self):
+        self.modify_idxgroup(0)
+
+    def modify_idxgroup(self, idx, new_gData):
         wd = self.app.wd
         wd.find_element_by_link_text("groups").click()
-        self.select_fst_g()
+        self.sel_idxgroup(idx)
         wd.find_element_by_name("edit").click()
         self.fill_gform(new_gData)
         wd.find_element_by_name("update").click()
         wd.find_element_by_link_text("group page").click()
+        self.group_cache = None
 
     def count(self):
         wd = self.app.wd
         wd.find_element_by_link_text("groups").click()
         return len(wd.find_elements_by_name("selected[]"))
+
+    group_cache = None
+
+    def get_gr_list(self):
+        if self.group_cache is None:
+            wd = self.app.wd
+            self.open_gp()
+            self.group_cache = []
+            for i in wd.find_elements_by_css_selector('span.group'):
+                text = i.text  # обращение к свойству "text" элемента
+                id = i.find_element_by_name('selected[]').get_attribute('value')
+                self.group_cache.append(Group(name=text, id=id))
+        return list(self.group_cache)
+

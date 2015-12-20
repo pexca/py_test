@@ -23,4 +23,4 @@ def stop(request):
     request.addfinalizer(fin)
     return fixture
 
-# autouse=True - параметр автоматического срensure_абатывания фикстуры, если она нигде не указана
+# autouse=True - параметр автоматического србатывания фикстуры, если она нигде не указана

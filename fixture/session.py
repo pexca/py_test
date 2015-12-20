@@ -31,7 +31,7 @@ class SessionHandler:
         wd = self.app.wd
         if self.is_logged_in():
             if self.logged_in_as(username):
-                return
+                return  # what does it do exactly?
             else: self.logout()
         self.login(username, password)
 

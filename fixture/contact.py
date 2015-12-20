@@ -1,3 +1,6 @@
+from model.contact import *
+
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -42,11 +45,12 @@ class ContactHelper:
 
     def count(self):
         wd = self.app.wd
+        wd.find_element_by_link_text("home").click()
         return len(wd.find_elements_by_name("selected[]"))
 
     def mod_fstC(self, new_cData):
         wd = self.app.wd
-        self.select_fstC()
+        # self.select_fstC()
         # open edit form
         wd.find_element_by_css_selector("img[alt=\"Edit\"]").click()
         # fill some fields
@@ -57,3 +61,12 @@ class ContactHelper:
     def select_fstC(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
+
+    def get_conts_lst(self):
+        wd = self.app.wd
+        lst = []
+        for i in wd.find_elements_by_name('entry'):
+            text = i.text
+            id = i.find_element_by_name('selected[]').get_attribute('value')
+            lst.append(Contact(id=id, firstname=text))
+        return lst
