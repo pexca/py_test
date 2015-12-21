@@ -30,9 +30,12 @@ class ContactHelper:
             wd.find_element_by_name(field_name).send_keys(text)
 
     def del_fstcontact(self):
+        self.del_cont_by_idx(0)  # удалить элемент списка с индексом 0 == удалить первый элемент списка контактов
+
+    def del_cont_by_idx(self, idx):
         wd = self.app.wd
         #select first contact
-        self.select_fstC()
+        self.select_cont_by_idx(idx)
         wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
         wd.switch_to_alert().accept()
         self.contacts_cache = None
@@ -51,9 +54,12 @@ class ContactHelper:
         wd.find_element_by_link_text("home").click()
         return len(wd.find_elements_by_name("selected[]"))
 
-    def mod_fstC(self, new_cData):
+    def mod_fstC(self):
+        self.modify_idxcont(0)
+
+    def modify_idxcont(self, idx, new_cData):
         wd = self.app.wd
-        # self.select_fstC()
+        self.select_cont_by_idx(idx)
         # open edit form
         wd.find_element_by_css_selector("img[alt=\"Edit\"]").click()
         # fill some fields
@@ -66,11 +72,16 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
+    def select_cont_by_idx(self, idx):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[idx].click()
+
     contacts_cache = None
 
     def get_conts_lst(self):
         if self.contacts_cache is None:
             wd = self.app.wd
+            wd.find_element_by_link_text("home").click()
             self.contacts_cache = []
             for i in wd.find_elements_by_name('entry'):
                 cells = i.find_elements_by_xpath('//div/div[4]/form[2]/table/tbody/tr/td')
@@ -78,6 +89,7 @@ class ContactHelper:
                 text1 = cells[1].text
                 id = i.find_element_by_name('selected[]').get_attribute('value')
                 self.contacts_cache.append(Contact(id=id, firstname=text, lastname=text1))
-        return list(self.contacts_cache)
+        return self.contacts_cache
+
 
 
