@@ -66,7 +66,8 @@ class ContactHelper:
         wd = self.app.wd
         lst = []
         for i in wd.find_elements_by_name('entry'):
-            text = i.text
+            cells = i.find_elements_by_xpath('//div/div[4]/form[2]/table/tbody/tr/td')
+            text = cells[2].text
             id = i.find_element_by_name('selected[]').get_attribute('value')
             lst.append(Contact(id=id, firstname=text))
         return lst
