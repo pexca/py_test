@@ -44,7 +44,7 @@ def pytest_addoption(parser):  # запуск тестов с передачей
 def pytest_generate_tests(metafunc):  # via 'metafunc' object code can receive complete test-function info
     for fixture in metafunc.fixturenames:
         if fixture.startswith('data_'):
-            test_data = load_from_module(fixture[5:])
+            test_data = load_from_module(fixture[5:])  # загружаем тестовые данные из фикстуры, имя кот.нач. с data
             metafunc.parametrize(fixture, test_data, ids=[str(x) for x in test_data])
         elif fixture.startswith('json_'):
             test_data = load_from_json(fixture[5:])
@@ -52,10 +52,11 @@ def pytest_generate_tests(metafunc):  # via 'metafunc' object code can receive c
 
 
 def load_from_module(module):
-    return importlib.import_module('data.%s' % module).test_data
+    return importlib.import_module('data.%s' % module).test_data  # импортируем модуль и берём из него test_data
 
 
 def load_from_json(file):
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/%s.json' % file)) as f:
-        return jsonpickle.decode(f.read())
+        return jsonpickle.decode(f.read())  # перекодируем в набор объектов Python
+
 
