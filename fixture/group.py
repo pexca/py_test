@@ -45,6 +45,7 @@ class GroupHelper:
 
     def sel_idxgroup(self, idx):  # select group with random index
         wd = self.app.wd
+        self.open_gp()
         wd.find_elements_by_name("selected[]")[idx].click()
 
     def del_idxgroup(self, idx):  # delete group with random index 'idx'
@@ -54,11 +55,12 @@ class GroupHelper:
         # submit group deletion
         self.sel_idxgroup(idx)
         wd.find_element_by_name("delete").click()
-        wd.find_element_by_link_text("group page").click()
+        self.return_to_gp()
         self.group_cache = None
 
     def select_fst_g(self):
         wd = self.app.wd
+        self.open_gp()
         wd.find_element_by_name("selected[]").click()
 
     def modify_fstg(self):
@@ -92,3 +94,25 @@ class GroupHelper:
                 self.group_cache.append(Group(name=text, id=id))
         return list(self.group_cache)
 
+    def del_group_byid(self, id):
+        wd = self.app.wd
+        self.open_gp()
+        # submit group deletion
+        self.sel_group_byid(id)
+        wd.find_element_by_name("delete").click()
+        self.return_to_gp()
+        self.group_cache = None
+
+    def sel_group_byid(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    def modify_group_byid(self, id):
+        wd = self.app.wd
+        wd.find_element_by_link_text("groups").click()
+        self.sel_group_byid(id)
+        wd.find_element_by_name("edit").click()
+        self.change_field_val('group_name', 'new group')
+        wd.find_element_by_name("update").click()
+        wd.find_element_by_link_text("group page").click()
+        self.group_cache = None

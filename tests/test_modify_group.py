@@ -1,19 +1,18 @@
 from model.group import Group
-from random import randrange
+import random
 
 
-def test_modify_gName(app):
-    if app.group.count() == 0:
+def test_modify_gName(app, db, check_ui):
+    if len(db.get_group_list()) == 0:
         app.create_group(Group(name="test"))
-    old_groups = app.group.get_gr_list()
-    idx = randrange(len(old_groups))
-    group = Group(name="New group")
-    group.id = old_groups[idx].id  # remember id
-    app.group.modify_idxgroup(idx, group)
-    new_groups = app.group.get_gr_list()
+    old_groups = db.get_group_list()
+    group = random.choice(old_groups)
+    app.group.modify_group_byid(group.id)
+    new_groups = db.get_group_list()
     assert len(old_groups) == len(new_groups)
-    old_groups[idx] = group
-    assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_gr_list(), key=Group.id_or_max)
+
 
 """
 def test_modify_gHeader(app):

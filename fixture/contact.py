@@ -153,3 +153,12 @@ class ContactHelper:
     def select_cont_byid(self, id):
         wd = self.app.wd
         wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    def modify_cont_byid(self, id):
+        wd = self.app.wd
+        self.app.open_hp()
+        self.select_cont_byid(id)
+        wd.find_element_by_css_selector('img[alt="Edit"]').click()
+        self.input('lastname', 'new lastname')
+        wd.find_element_by_name("update").click()
+        self.contacts_cache = None
