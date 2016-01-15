@@ -43,6 +43,7 @@ class ContactHelper:
 
     def add_address(self):
         wd = self.app.wd
+        self.app.open_hp()                      #
         wd.find_element_by_css_selector('img[alt="Edit"]').click()
         wd.find_element_by_name("address").click()
         wd.find_element_by_name("address").clear()
@@ -52,7 +53,7 @@ class ContactHelper:
 
     def count(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        self.app.open_hp()
         return len(wd.find_elements_by_name("selected[]"))
 
     def mod_fstC(self):
@@ -71,10 +72,12 @@ class ContactHelper:
 
     def select_fstC(self):
         wd = self.app.wd
+        self.app.open()
         wd.find_element_by_name("selected[]").click()
 
     def select_cont_by_idx(self, idx):
         wd = self.app.wd
+        self.app.open_hp()  #
         wd.find_elements_by_name("selected[]")[idx].click()
 
     contacts_cache = None
@@ -82,7 +85,7 @@ class ContactHelper:
     def get_conts_lst(self):
         if self.contacts_cache is None:
             wd = self.app.wd
-            wd.find_element_by_link_text("home").click()
+            self.app.open_hp()
             self.contacts_cache = []
             for i in wd.find_elements_by_name('entry'):
                 cells = i.find_elements_by_tag_name('td')
@@ -139,6 +142,14 @@ class ContactHelper:
         sphone = re.search('P: (.*)', text).group(1)
         return Contact(hphone=hphone, wphone=wphone, sphone=sphone, mphone=mphone)
 
+    def del_cont_byid(self, id):
+        wd = self.app.wd
+        self.app.open_hp()
+        self.select_cont_byid(id)
+        wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
+        wd.switch_to_alert().accept()
+        self.contacts_cache = None
 
-
-
+    def select_cont_byid(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
