@@ -1,2 +1,2 @@
 # python_training
-Python training Nov-Jan
+создание архитектуры тестового набора для вебсайта, запуск автотестов, фреймворк pytest
